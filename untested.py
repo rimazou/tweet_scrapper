@@ -138,10 +138,14 @@ def getConversation(conversation_id):
    bearer_header = get_bearer_header()
    resp = requests.get(uri, headers=bearer_header, params=params)
    return resp.json()
-def save_json(file_name, file_content):
-    with open(path + file_name, 'w', encoding='utf-8') as f:
-        json.dump(file_content, f, ensure_ascii=False, indent=4)
-basket=getConversation(1445811612775030785)
-for i in basket :
-    save_json('myconv',i)
 
+
+def getConversationId(id):
+    uri = 'https://api.twitter.com/2/tweets?'
+    params = {
+       'ids':id,
+       'tweet.fields':'conversation_id'
+    }
+    bearer_header = get_bearer_header()
+    resp = requests.get(uri, headers=bearer_header, params=params)
+    return resp.json()['data'][0]['conversation_id']

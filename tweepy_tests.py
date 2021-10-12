@@ -224,49 +224,5 @@ def get_bearer_header():
    return bearer_header
 
 # Returns the conversation_id of a tweet from v2 endpoint using the tweet id
-def getConversationId(id):
-   uri = 'https://api.twitter.com/2/tweets?'
-
-   params = {
-       'ids':id,
-       'tweet.fields':'conversation_id'
-   }
-   
-   bearer_header = get_bearer_header()
-   resp = requests.get(uri, headers=bearer_header, params=params)
-   return resp.json()['data'][0]['conversation_id']
 
 # Returns a conversation from the v2 enpoint  of type [<original_tweet_text>, <[replies]>]
-def getConversation(conversation_id):
-   uri = 'https://api.twitter.com/2/tweets/search/recent?'
-
-   params = {'query': f'conversation_id:{conversation_id}',
-        #'tweet.fields': 'in_reply_to_user_id', 
-        #'tweet.fields':'conversation_id',
-        'tweet.fields':'geo',
-        #'tweet.fields':'id', 
-        #'tweet.fields':'text', 
-        #'tweet.fields':'attachments',
-        #'tweet.fields':'author_id',
-        #'tweet.fields':'context_annotations', 
-        #'tweet.fields':'created_at', 
-        #'tweet.fields':'entities', 
-        #'tweet.fields':'lang',
-        #'tweet.fields':'non_public_metrics',
-        #'tweet.fields':'organic_metrics',
-        #'tweet.fields':'possibly_sensitive', 
-        #'tweet.fields':'promoted_metrics,
-        #'tweet.fields':'public_metrics',
-        #'tweet.fields':'referenced_tweets',
-        #'tweet.fields':'reply_settings,
-        #'tweet.fields':'source',
-        #'tweet.fields':'withheld'   
-   }
-   
-   bearer_header = get_bearer_header()
-   resp = requests.get(uri, headers=bearer_header, params=params)
-   return resp.json()
-
-basket=getConversation(1445811612775030785)
-save_json('myconvo+a',basket)
-#get_all_tweets_of('mspuuurple')
