@@ -114,8 +114,8 @@ def get_followers():
 
 #get_all_tweets('TwitterDev')
 
-
-def get_all_recent_tweets(subject):    
+#this function returns a CSV file with recent tweets containing the parametre subject in number of MAX_RECENT 
+def get_all_recent_tweets(subject:str):    
   alltweets = [] # initialize a list to hold all the Tweets
   # make initial request for most recent tweets 200 is the max
   new_tweets = api.search_tweets(q=subject,count=200)
@@ -137,14 +137,22 @@ def get_all_recent_tweets(subject):
     ### END OF WHILE LOOP ###
   # transform the tweepy tweets into a 2D array that will 
   # populate the csv
-  outtweets = [[tweet.id_str, tweet.created_at, tweet.text, tweet.favorite_count,tweet.in_reply_to_screen_name, tweet.retweeted] for tweet in alltweets]
-  # write the csv
-  with open(path + '%s_tweets.csv' % subject, 'w',encoding='utf-8') as f:
-    writer = csv.writer(f)
-    writer.writerow(["id","created_at","text","likes","in reply to","retweeted"])
-    writer.writerows(outtweets)
-  pass
-#get_all_recent_tweets('taxi')
+  #on peut toujours rajouter d'autres champs de tweets disponibles 
+  outtweets = [[tweet.id_str, tweet.created_at, tweet.text, tweet.favorite_count,tweet.in_reply_to_screen_name, tweet.retweeted, tweet.lang] for tweet in alltweets]
+  return outtweets, oldest
+#NB oldest ne fait pas partie des tweets qui sont dans le fichier contrairement a oldest-1
+def intoCSV(subject : str , tweets : list):   
+  # write the csv 
+    with open(path + '%s_tweets.csv' % subject, 'w',encoding='utf-8') as f:
+      writer = csv.writer(f)
+      writer.writerow(["id","created_at","text","likes","in reply to","retweeted","language"])
+      writer.writerows(tweets)
+    pass
+
+taxitweets=[]
+taxitweets, oldest_id=get_all_recent_tweets('taxi')
+intoCSV('taxi',taxitweets)
+print(oldest_id)
 
 class twi_cred(NamedTuple):
     consumer_key : str
@@ -155,74 +163,12 @@ class twi_cred(NamedTuple):
 
 twitter_creds= twi_cred(consumer_key,consumer_secret,access_token,access_token_secret)
 
-
-def get_tweet_ids(username :str):
-    scandy_tweets = api.user_timeline(screen_name=username, count=5)
-    tweet_id_list = []
-    for twit in scandy_tweets:
-        json_str = json.loads(json.dumps(twit._json))
-        tweet_id_list.append(json_str['id'])
-    return tweet_id_list
-
-
-def get_bearer_token():
-    uri_token_endpoint = 'https://api.twitter.com/oauth2/token'
-    key_secret = f"{consumer_key}:{consumer_secret}".encode('ascii')
-    b64_encoded_key = base64.b64encode(key_secret)
-    b64_encoded_key = b64_encoded_key.decode('ascii')
-
-    auth_headers = {
-        'Authorization': 'Basic {}'.format(b64_encoded_key),
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-        }
-
-    auth_data = {
-        'grant_type': 'client_credentials'
-        }
-
-    auth_resp = requests.post(uri_token_endpoint, headers=auth_headers, data=auth_data)
-    print(auth_resp.status_code)
-    bearer_token = auth_resp.json()['access_token']
-    return bearer_token
-
-
-
 #bearer_tokenn = get_bearer_token()
 
 bearer_header = {
     'Accept-Encoding': 'gzip',
     'Authorization': 'Bearer {}'.format(bearer_token),
-    'oauth_consumer_key': consumer_key 
+    'oauth_consumer_key': twitter_creds.consumer_key 
 }
 
-#recent_tweets = get_tweet_ids('Twitter')
-# returns a bearer_header to attach to requests to the Twitter api v2 enpoints which are 
-# not yet supported by tweepy 
-def get_bearer_header():
-   uri_token_endpoint = 'https://api.twitter.com/oauth2/token'
-   key_secret = f"{twitter_creds.consumer_key}:{twitter_creds.consumer_key_secret}".encode('ascii')
-   b64_encoded_key = base64.b64encode(key_secret)
-   b64_encoded_key = b64_encoded_key.decode('ascii')
 
-   auth_headers = {
-       'Authorization': 'Basic {}'.format(b64_encoded_key),
-       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-       }
-
-   auth_data = {
-       'grant_type': 'client_credentials'
-       }
-
-   auth_resp = requests.post(uri_token_endpoint, headers=auth_headers, data=auth_data)
-   bearer_token = auth_resp.json()['access_token']
-
-   bearer_header = {
-       'Accept-Encoding': 'gzip',
-       'Authorization': 'Bearer {}'.format(bearer_token),
-       'oauth_consumer_key': twitter_creds.consumer_key 
-   }
-   return bearer_header
-
-# Returns the conversation_id of a tweet from v2 endpoint using the tweet id
-
-# Returns a conversation from the v2 enpoint  of type [<original_tweet_text>, <[replies]>]

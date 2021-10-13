@@ -139,6 +139,50 @@ def getConversation(conversation_id):
    resp = requests.get(uri, headers=bearer_header, params=params)
    return resp.json()
 
+def get_bearer_token():
+    uri_token_endpoint = 'https://api.twitter.com/oauth2/token'
+    key_secret = f"{consumer_key}:{consumer_secret}".encode('ascii')
+    b64_encoded_key = base64.b64encode(key_secret)
+    b64_encoded_key = b64_encoded_key.decode('ascii')
+
+    auth_headers = {
+        'Authorization': 'Basic {}'.format(b64_encoded_key),
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        }
+
+    auth_data = {
+        'grant_type': 'client_credentials'
+        }
+
+    auth_resp = requests.post(uri_token_endpoint, headers=auth_headers, data=auth_data)
+    print(auth_resp.status_code)
+    bearer_token = auth_resp.json()['access_token']
+    return bearer_token
+
+def get_bearer_header():
+    uri_token_endpoint = 'https://api.twitter.com/oauth2/token'
+    key_secret = f"{twitter_creds.consumer_key}:{twitter_creds.consumer_key_secret}".encode('ascii')
+    b64_encoded_key = base64.b64encode(key_secret)
+    b64_encoded_key = b64_encoded_key.decode('ascii')
+
+    auth_headers = {
+       'Authorization': 'Basic {}'.format(b64_encoded_key),
+       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+       }
+
+    auth_data = {
+       'grant_type': 'client_credentials'
+       }
+
+    auth_resp = requests.post(uri_token_endpoint, headers=auth_headers, data=auth_data)
+    bearer_token = auth_resp.json()['access_token']
+
+    bearer_header = {
+       'Accept-Encoding': 'gzip',
+       'Authorization': 'Bearer {}'.format(bearer_token),
+       'oauth_consumer_key': twitter_creds.consumer_key 
+    }
+    return bearer_header
 
 def getConversationId(id):
     uri = 'https://api.twitter.com/2/tweets?'
