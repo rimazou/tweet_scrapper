@@ -4,12 +4,12 @@ import json
 import base64
 import urllib.parse
 from typing import NamedTuple
-consumer_key = 'dZbG53gSRASfPictPHGWMwNBW'
-consumer_secret = 'w6UVNwH7oNChDLyGGdRebRpV1dxY9qv5eevsN6rwFt5VdSFSYh'
-access_token = '1304891973959135239-x2hbArreelQQVFSc9FpkmKOvnvto7v'
-access_token_secret = 'oSYpVR55zc7xZNnApZAPlT099qdO7vbqTTglT76p8YEr2'
-bearer_token = 'AAAAAAAAAAAAAAAAAAAAAM5uTwEAAAAAsFdMGFd%2FJE29VMAMmjdshJzr5KU%3DiRxoBSEClIcECmGewsUQUbPc58E83Px10qMUtO71svbARXb86a' 
-path = "C:/Users/Rima/Documents/git_projects/pyth_projects/"
+consumer_key = ''
+consumer_secret = ''
+access_token = ''
+access_token_secret = ''
+bearer_token = '' 
+path = ""
         
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
