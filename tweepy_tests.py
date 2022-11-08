@@ -7,11 +7,11 @@ import requests
 import base64
 from typing import NamedTuple
 #ACCESS KEYS TWITTER API
-consumer_key = 'dZbG53gSRASfPictPHGWMwNBW'
-consumer_secret = 'w6UVNwH7oNChDLyGGdRebRpV1dxY9qv5eevsN6rwFt5VdSFSYh'
-access_token = '1304891973959135239-x2hbArreelQQVFSc9FpkmKOvnvto7v'
-access_token_secret = 'oSYpVR55zc7xZNnApZAPlT099qdO7vbqTTglT76p8YEr2'
-bearer_token = 'AAAAAAAAAAAAAAAAAAAAAM5uTwEAAAAAsFdMGFd%2FJE29VMAMmjdshJzr5KU%3DiRxoBSEClIcECmGewsUQUbPc58E83Px10qMUtO71svbARXb86a' 
+consumer_key = ''
+consumer_secret = ''
+access_token = ''
+access_token_secret = ''
+bearer_token = '' 
 path = "datasets/"
 
 MAX_RECENT= 1000 # we can only retrieve 18000 of tweets within 15min
